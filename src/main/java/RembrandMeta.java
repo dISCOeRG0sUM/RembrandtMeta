@@ -1,16 +1,21 @@
-//import codeanticode.syphon.SyphonServer;
+import blobDetection.BlobDetection;
 import processing.core.PApplet;
+import processing.core.PImage;
 import themidibus.MidiBus;
 
-public class RembrandMeta1 extends PApplet{
+public class RembrandMeta extends PApplet{
 
     public static void main(String[] args) {
-        PApplet.main("RembrandMeta1");
+        PApplet.main("RembrandMeta");
     }
 
     MidiBus myMidi;
     MetaBalls mBalls;
-//    SyphonServer serverSyphone;
+    PImage [] myPix;
+    BlobDetection theBlobDetection;
+
+    int indexPix = 0;
+    int numOfPix = 5;
 
 
 
@@ -22,7 +27,7 @@ public class RembrandMeta1 extends PApplet{
     public void setup(){
 
 
-        // die Metaballs werden initialisiert
+        // die Metaballs werden initialisiertÅ
         mBalls = new MetaBalls(this);
 
         // ** Midi
@@ -32,24 +37,35 @@ public class RembrandMeta1 extends PApplet{
         myMidi = new MidiBus(this,0,1);
         //**
 
-        // ** Syphon
- //       serverSyphone = new SyphonServer(this, "RembrandMeta1");
-        //**
+
+        // ** Pix laden
+        myPix = new PImage[numOfPix];
+        for (int i = 0; i < numOfPix; i++){
+            myPix[i] = loadImage("/Users/jendrik/Documents/Processing/Lichtpiraten/RembrandtMeta/Pix/" +i +".png", "png");
+        }
+
+        //** die Blob Detection
+
+        theBlobDetection = new BlobDetection(width,height);
+
+
+
+
 
     }
 
     public void draw(){
-        // send via Syphon begin----------------------------------------------------------------------------------------
+
         background(0);
+
+        indexPix = constrain(indexPix,0,numOfPix -1);
+        image(myPix[indexPix],0,0);
 
         mBalls.show();
 
 
-        //!!!!!!irgend was will hier noch nicht https://github.com/Syphon/Processing/issues/18
-        //serverSyphone.sendScreen();
-        // send via Syphon end------------------------------------------------------------------------------------------
 
-        // hier begint das Interface------------------------------------------------------------------------------------
+
 
         //** FrameRate kontrolle und Warnung
         if (frameRate < 30){
@@ -106,13 +122,46 @@ public class RembrandMeta1 extends PApplet{
                                 break;
                         }
                         break;
+                    case 21:
+                        switch (value){
+                            case 1:
+                                indexPix += 1;
+                                println("intexPix: " +indexPix);
+                                break;
+                            case 127:
+                                indexPix -= 1;
+                                println("intexPix: " +indexPix);
+                                break;
+                        }
                     case 16:
-                        mBalls.ballsR = 10 * value;
+                        mBalls.ballsR = 10 * value; // für carens meady board
+                        break;
 
                 }
                 break;
         }
 
+    }
+
+    public void keyPressed(){
+        println("keyCode: " +keyCode);
+
+        switch (keyCode){
+            case 38:
+                mBalls.ballsR += 100;
+                break;
+            case 40:
+                mBalls.ballsR -= 100;
+                break;
+            case 39:
+                indexPix += 1;
+                //println("intexPix: " +indexPix);
+                break;
+            case 37:
+                indexPix -= 1;
+                //println("intexPix: " +indexPix);
+                break;
+        }
     }
 
 }

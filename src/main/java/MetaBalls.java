@@ -2,7 +2,7 @@ import processing.core.PApplet;
 
 import static processing.core.PApplet.dist;
 
-public class MetaBalls{
+public class MetaBalls {
     PApplet parent;
 
     // hier müssen die globale Variablen etc. deklariert werden

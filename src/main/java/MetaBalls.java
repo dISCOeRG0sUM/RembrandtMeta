@@ -30,7 +30,7 @@ public class MetaBalls {
                 float sum = 0;
                 for (Ball b : balls) {
                     float d = dist(x, y, b.pos.x, b.pos.y);
-                    sum += ballsR * balls[0].r / d;
+                    sum += ballsR * b.r / d;
                 }
                 parent.pixels[index] = parent.color(sum);
             }

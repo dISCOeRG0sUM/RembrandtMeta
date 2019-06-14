@@ -41,7 +41,7 @@ public class RembrandMeta extends PApplet{
         // ** Pix laden
         myPix = new PImage[numOfPix];
         for (int i = 0; i < numOfPix; i++){
-            myPix[i] = loadImage("/Users/jendrik/Documents/Processing/Lichtpiraten/RembrandtMeta/Pix/" +i +".png", "png");
+            myPix[i] = loadImage("Pix/" +i +".png", "png");
         }
 
         //** die Blob Detection

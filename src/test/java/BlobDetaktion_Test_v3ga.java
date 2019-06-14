@@ -1,4 +1,6 @@
-import blobDetection.*;
+import blobDetection.Blob;
+import blobDetection.BlobDetection;
+import blobDetection.EdgeVertex;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -35,7 +37,7 @@ public class BlobDetaktion_Test_v3ga extends PApplet{
     PImage img;
 
     public void settings(){
-        size(1280, 720);
+        size(1280, 720,P2D);
         //pixelDensity(displayDensity());
 
 
@@ -44,6 +46,7 @@ public class BlobDetaktion_Test_v3ga extends PApplet{
     public void setup(){
         theBlobs = new BlobDetection(width,height);
         theBlobs.setThreshold(0.30f);
+        theBlobs.setThreshold(0.38f);
         theBlobs.computeBlobs(img.pixels);
 
         img = loadImage("Pix/Blob_test.png");

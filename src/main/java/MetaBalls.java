@@ -1,15 +1,16 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 import static processing.core.PApplet.dist;
-import static processing.core.PApplet.println;
+import static processing.core.PConstants.ARGB;
 
-public class MetaBalls {
+public class MetaBalls{
     PApplet parent;
 
     // hier müssen die globale Variablen etc. deklariert werden
-    Ball[] balls = new Ball[3];
-    float ballsR = 200;
-
+    Ball[] balls = new Ball[5];
+    float ballsR = 800;
+    PImage img;
 
     // Contrutor
     MetaBalls(PApplet p) {
@@ -19,26 +20,29 @@ public class MetaBalls {
             balls[i] = new Ball(parent,parent.random(parent.width),parent.random(parent.height));
         }
 
+        img = parent.createImage(parent.width,parent.height,ARGB);
+
     }
 
 
     public void show() {
 
-        parent.loadPixels();
+
+        img.loadPixels();
         for (int x = 0; x < parent.width; x++) {
             for (int y = 0; y < parent.height; y++) {
                 int index = x + y * parent.width;
                 float sum = 0;
                 for (Ball b : balls) {
                     float d = dist(x, y, b.pos.x, b.pos.y);
-                    sum += ballsR * b.r / d;
-                    println(sum);
+                    sum += ballsR / d;
                 }
-                parent.pixels[index] = parent.color(255,255,255,sum); // warum will Alfa nicht funktionieren?
+                img.pixels[index] = parent.color(255,255,255, sum);
             }
         }
+        img.updatePixels();
 
-        parent.updatePixels();
+        parent.image(img,0,0);
 
         for (Ball b : balls) {
             b.update();

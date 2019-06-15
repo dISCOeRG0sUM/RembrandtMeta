@@ -1,4 +1,3 @@
-import blobDetection.BlobDetection;
 import processing.core.PApplet;
 import processing.core.PImage;
 import themidibus.MidiBus;
@@ -12,7 +11,7 @@ public class RembrandMeta extends PApplet{
     MidiBus myMidi;
     MetaBalls mBalls;
     PImage [] myPix;
-    BlobDetection theBlobDetection;
+
 
     int indexPix = 0;
     int numOfPix = 5;
@@ -43,11 +42,6 @@ public class RembrandMeta extends PApplet{
         for (int i = 0; i < numOfPix; i++){
             myPix[i] = loadImage("Pix/" +i +".png", "png");
         }
-
-        //** die Blob Detection
-
-        theBlobDetection = new BlobDetection(width,height);
-
 
 
 

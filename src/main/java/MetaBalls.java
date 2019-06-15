@@ -1,6 +1,7 @@
 import processing.core.PApplet;
 
 import static processing.core.PApplet.dist;
+import static processing.core.PApplet.println;
 
 public class MetaBalls {
     PApplet parent;
@@ -31,8 +32,9 @@ public class MetaBalls {
                 for (Ball b : balls) {
                     float d = dist(x, y, b.pos.x, b.pos.y);
                     sum += ballsR * b.r / d;
+                    println(sum);
                 }
-                parent.pixels[index] = parent.color(sum);
+                parent.pixels[index] = parent.color(255,255,255,sum); // warum will Alfa nicht funktionieren?
             }
         }
 

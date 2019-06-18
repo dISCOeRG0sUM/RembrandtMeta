@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.core.PVector;
 import themidibus.MidiBus;
 
 public class RembrandMeta extends PApplet{
@@ -15,6 +16,11 @@ public class RembrandMeta extends PApplet{
 
     int indexPix = 0;
     int numOfPix = 5;
+
+    // für dir Forces
+    float masse = 1; //masse der Metaballs
+    PVector wind = new PVector(0.1f, 0,5f);
+    PVector gravity = new PVector(0f,0.1f * masse);
 
 
 
@@ -56,6 +62,10 @@ public class RembrandMeta extends PApplet{
         image(myPix[indexPix],0,0);
 
         mBalls.show();
+
+        // füge Krafte hin zu
+        mBalls.applyForces(wind);
+        mBalls.applyForces(gravity);
 
 
 

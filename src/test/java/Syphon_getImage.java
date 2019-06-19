@@ -2,27 +2,24 @@ import codeanticode.syphon.SyphonClient;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class SyphoneGetImage extends PApplet{
+public class Syphon_getImage extends PApplet{
 
     public static void main(String[] args) {
-        PApplet.main("SyphoneGetImage");
+        PApplet.main("Syphon_getImage");
     }
 
     PImage img;
+
     SyphonClient client;
 
     public void settings(){
         size(1280, 720,P2D);
-        pixelDensity(displayDensity());
-
-
+        //pixelDensity(displayDensity());
     }
 
     public void setup(){
-
-        // Create syhpon client to receive frames
-        // from the first available running server:
         client = new SyphonClient(this);
+
 
     }
 
@@ -46,7 +43,5 @@ public class SyphoneGetImage extends PApplet{
         } else if (key == 'd') {
             println(client.getServerName());
         }
-
     }
-
-}
+    }

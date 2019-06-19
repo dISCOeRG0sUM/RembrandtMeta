@@ -121,10 +121,10 @@ public class RembrandMeta extends PApplet{
                     case 20:
                         switch (value){
                             case 1:
-                                mBalls.ballsR += 1;
+                                mBalls.ballsR += 20;
                                 break;
                             case 127:
-                                mBalls.ballsR -= 1;
+                                mBalls.ballsR -= 20;
                                 break;
                         }
                         break;
@@ -139,9 +139,13 @@ public class RembrandMeta extends PApplet{
                                 println("intexPix: " +indexPix);
                                 break;
                         }
+                        break;
+
                     case 16:
                         mBalls.ballsR = 10 * value; // für carens meady board
                         break;
+
+
 
                 }
                 break;

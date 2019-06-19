@@ -26,7 +26,8 @@ public class SchifBlobTrack extends PApplet {
         printArray(cameras);
         video = new Capture(this, 640, 360);
         video.start();
-        trackColor = color(255, 0, 0);
+        trackColor = color(255, 255, 255);
+        colorMode(HSB);
     }
 
     public void captureEvent(Capture video) {
@@ -62,14 +63,19 @@ public class SchifBlobTrack extends PApplet {
                 int loc = x + y * video.width;
                 // What is current color
                 int currentColor = video.pixels[loc];
+                /*
                 float r1 = red(currentColor);
                 float g1 = green(currentColor);
                 float b1 = blue(currentColor);
                 float r2 = red(trackColor);
                 float g2 = green(trackColor);
                 float b2 = blue(trackColor);
+                 */
 
-                float d = distSq(r1, g1, b1, r2, g2, b2);
+                float b1 = brightness(currentColor);
+                float b2 = brightness(trackColor);
+
+                float d = distSq(b1, b2);
 
                 if (d < threshold * threshold) {
 
@@ -105,6 +111,11 @@ public class SchifBlobTrack extends PApplet {
     }
 
     // Custom distance functions w/ no square root for optimization
+    public float distSq(float x1, float x2) {
+        float d = (x2 - x1) * (x2 - x1);
+        return d;
+    }
+
     public float distSq(float x1, float y1, float x2, float y2) {
         float d = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
         return d;
@@ -116,12 +127,15 @@ public class SchifBlobTrack extends PApplet {
         return d;
     }
 
+    /*
     public void mousePressed() {
         // Save color where the mouse is clicked in trackColor variable
         int loc = mouseX + mouseY * video.width;
         trackColor = video.pixels[loc];
 
     }
+
+     */
 }
 
 

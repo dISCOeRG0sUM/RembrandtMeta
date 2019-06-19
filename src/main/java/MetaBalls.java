@@ -37,7 +37,7 @@ public class MetaBalls{
 
 
 
-    public void show() {
+    public PImage show() {
 
 
         img.loadPixels();
@@ -52,10 +52,16 @@ public class MetaBalls{
                 img.pixels[index] = parent.color(255, 255, 255, sum);
             }
         }
+
         img.updatePixels();
+        return img;
 
-        parent.image(img, 0, 0);
+        //parent.image(img, 0, 0);
 
+
+    }
+
+    public void update(){
         for (Ball b : balls) {
             b.update();
         }

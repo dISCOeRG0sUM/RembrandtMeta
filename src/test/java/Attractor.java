@@ -24,7 +24,7 @@ public class Attractor{
         dragOffset = new PVector(0f,0f);
     }
 
-    PVector attract(Ball  b){
+    public PVector attract(Ball  b){
         PVector force = PVector.sub(position,b.pos);
         float d = force.mag();
         d = p.constrain(d,5f,25f);
@@ -34,7 +34,7 @@ public class Attractor{
         return force;
     }
 
-    void show(){
+    public void show(){
         p.ellipseMode(PConstants.CENTER);
         p.strokeWeight(2);
         p.stroke(0);

@@ -1,7 +1,5 @@
-import codeanticode.syphon.SyphonClient;
-import codeanticode.syphon.SyphonServer;
+import codeanticode.syphon.*;
 import processing.core.PApplet;
-import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PVector;
 import themidibus.MidiBus;
@@ -19,8 +17,6 @@ public class RembrandMeta extends PApplet{
     SyphonClient client;
     SyphonServer server;
     PImage img;
-
-    PGraphics sendSypongImg;
 
 
     //** Hintergrund Bilder
@@ -55,8 +51,6 @@ public class RembrandMeta extends PApplet{
         client = new SyphonClient(this);
         server = new SyphonServer(this, "Processing Syphon");
 
-        sendSypongImg = createGraphics(width, height,P2D);
-
 
 
         // ** Hintergrund Bilder laden
@@ -74,14 +68,10 @@ public class RembrandMeta extends PApplet{
 
         background(0);
 
-        sendSypongImg.beginDraw();
-
-        // ** HIntergrund Bilder anzeigen
+        // HIntergrund Bilder anzeigen
         indexPix = constrain(indexPix,0,numOfPix -1);
-        sendSypongImg.image(myPix[indexPix],0,0);
+        image(myPix[indexPix],0,0);
 
-
-        // ** Syphon get image
         if (client.newFrame()) {
             // The first time getImage() is called with
             // a null argument, it will initialize the PImage
@@ -90,21 +80,13 @@ public class RembrandMeta extends PApplet{
             //img = client.getImage(img, false); // does not load the pixels array (faster)
         }
         if (img != null) {
-            sendSypongImg.image(img, 0, 0, width, height);
+            image(img, 0, 0, width, height);
         }
 
-        // ** Metaballs anzeigen
-        sendSypongImg.image(mBalls.show(), 0, 0);  // wie kann ich das hier in das sendSyponImag bekommen?
-        mBalls.update();
+        // Metaballs anzeigen
+        mBalls.show();
 
-
-        sendSypongImg.endDraw();
-        image(sendSypongImg,0,0);
-
-        // ** Syphon send imag
-        server.sendImage(sendSypongImg);
-
-        // ** füge Krafte hin zu
+        // füge Krafte hin zu
         mBalls.applyForces(wind);
         mBalls.applyForces(gravity);
 
@@ -120,7 +102,8 @@ public class RembrandMeta extends PApplet{
         }
         textSize(14);
         text("FrameRate: " + frameRate, 20, height - 20);
-        // **
+
+        server.sendScreen();
     }
 
 

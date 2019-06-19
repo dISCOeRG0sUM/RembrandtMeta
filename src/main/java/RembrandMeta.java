@@ -1,7 +1,10 @@
+import codeanticode.syphon.*;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 import themidibus.MidiBus;
+
+
 
 public class RembrandMeta extends PApplet{
 
@@ -11,6 +14,9 @@ public class RembrandMeta extends PApplet{
 
     MidiBus myMidi;
     MetaBalls mBalls;
+    SyphonClient client;
+    PImage img;
+
 
     //** Hintergrund Bilder
     PImage [] myPix;
@@ -38,8 +44,10 @@ public class RembrandMeta extends PApplet{
         // ** Midi
         // Gibt alle verfügbaren Midi Devices aus
         MidiBus.list();
-
         myMidi = new MidiBus(this,0,1);
+
+        // ** Syphong
+        client = new SyphonClient(this);
 
 
 
@@ -61,6 +69,17 @@ public class RembrandMeta extends PApplet{
         // HIntergrund Bilder anzeigen
         indexPix = constrain(indexPix,0,numOfPix -1);
         image(myPix[indexPix],0,0);
+
+        if (client.newFrame()) {
+            // The first time getImage() is called with
+            // a null argument, it will initialize the PImage
+            // object with the correct size.
+            img = client.getImage(img); // load the pixels array with the updated image info (slow)
+            //img = client.getImage(img, false); // does not load the pixels array (faster)
+        }
+        if (img != null) {
+            image(img, 0, 0, width, height);
+        }
 
         // Metaballs anzeigen
         mBalls.show();

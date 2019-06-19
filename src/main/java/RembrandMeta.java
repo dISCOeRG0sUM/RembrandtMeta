@@ -11,9 +11,9 @@ public class RembrandMeta extends PApplet{
 
     MidiBus myMidi;
     MetaBalls mBalls;
+
+    //** Hintergrund Bilder
     PImage [] myPix;
-
-
     int indexPix = 0;
     int numOfPix = 5;
 
@@ -40,10 +40,10 @@ public class RembrandMeta extends PApplet{
         MidiBus.list();
 
         myMidi = new MidiBus(this,0,1);
-        //**
 
 
-        // ** Pix laden
+
+        // ** Hintergrund Bilder laden
         myPix = new PImage[numOfPix];
         for (int i = 0; i < numOfPix; i++){
             myPix[i] = loadImage("Pix/" +i +".png", "png");
@@ -58,9 +58,11 @@ public class RembrandMeta extends PApplet{
 
         background(0);
 
+        // HIntergrund Bilder anzeigen
         indexPix = constrain(indexPix,0,numOfPix -1);
         image(myPix[indexPix],0,0);
 
+        // Metaballs anzeigen
         mBalls.show();
 
         // füge Krafte hin zu

@@ -10,34 +10,31 @@ import static processing.core.PConstants.ARGB;
 public class MetaBalls{
     PApplet parent;
 
-    // hier müssen die globale Variablen etc. deklariert werden
     int anzahl = 5;
     Ball[] balls = new Ball[anzahl];
     float ballsR = 800;
     PImage img;
 
 
-
     // Contrutor
     MetaBalls(PApplet p) {
         parent = p;
 
-        for (int i = 0; i < balls.length; i++){
-            balls[i] = new Ball(parent,parent.random(1,4),parent.random(parent.width),parent.random(parent.height));
+        for (int i = 0; i < balls.length; i++) {
+            balls[i] = new Ball(parent, parent.random(1, 4), parent.random(parent.width), parent.random(parent.height));
         }
 
-        img = parent.createImage(parent.width,parent.height,ARGB);
+        img = parent.createImage(parent.width, parent.height, ARGB);
 
     }
 
-    public void applyForces(PVector forces){
+    public void applyForces(PVector forces) {
 
-        for (Ball b : balls){
-            b.applyFoce(forces);;
+        for (Ball b : balls) {
+            b.applyFoce(forces);
         }
 
     }
-
 
 
     public PImage show() {
@@ -58,13 +55,9 @@ public class MetaBalls{
 
         img.updatePixels();
         return img;
-
-        //parent.image(img, 0, 0);
-
-
     }
 
-    public void update(){
+    public void update() {
         for (Ball b : balls) {
             b.update();
         }

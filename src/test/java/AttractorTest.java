@@ -27,7 +27,7 @@ public class AttractorTest {
     public PVector attract(Mover b){
         PVector force = PVector.sub(position,b.position);
         float d = force.mag();
-        d = p.constrain(d,5f,25f);
+        d = PApplet.constrain(d,5f,25f);
         force.normalize();
         float strength = (G * mass * b.mass) / (d * d);
         force.mult(strength);
@@ -46,7 +46,7 @@ public class AttractorTest {
 
     // The methods below are for mouse interaction
     public void clicked(int mx, int my) {
-        float d = p.dist(mx,my,position.x,position.y);
+        float d = PApplet.dist(mx,my,position.x,position.y);
         if (d < mass) {
             dragging = true;
             dragOffset.x = position.x-mx;
@@ -55,13 +55,8 @@ public class AttractorTest {
     }
 
     public void hover(int mx, int my) {
-        float d = p.dist(mx,my,position.x,position.y);
-        if (d < mass) {
-            rollover = true;
-        }
-        else {
-            rollover = false;
-        }
+        float d = PApplet.dist(mx,my,position.x,position.y);
+        rollover = d < mass;
     }
 
     public void stopDragging() {

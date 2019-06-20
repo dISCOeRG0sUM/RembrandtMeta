@@ -43,10 +43,10 @@ public class SchifBlob {
 
     public void add(float x, float y) {
         points.add(new PVector(x, y));
-        minx = p.min(minx, x);
-        miny = p.min(miny, y);
-        maxx = p.max(maxx, x);
-        maxy = p.max(maxy, y);
+        minx = PApplet.min(minx, x);
+        miny = PApplet.min(miny, y);
+        maxx = PApplet.max(maxx, x);
+        maxy = PApplet.max(maxy, y);
     }
 
     public float size() {
@@ -69,11 +69,7 @@ public class SchifBlob {
             }
         }
 
-        if (d < distThreshold*distThreshold) {
-            return true;
-        } else {
-            return false;
-        }
+        return d < distThreshold * distThreshold;
     }
 
     // Custom distance functions w/ no square root for optimization

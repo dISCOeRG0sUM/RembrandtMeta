@@ -1,7 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class Gravitation extends PApplet{
+public class Gravitation extends PApplet {
 
     public static void main(String[] args) {
         PApplet.main("Gravitation");
@@ -10,21 +10,21 @@ public class Gravitation extends PApplet{
     Mover[] movers = new Mover[10];
     AttractorTest a;
 
-    public void settings(){
-        size(1280, 720,P2D);
+    public void settings() {
+        size(1280, 720, P2D);
         pixelDensity(displayDensity());
     }
 
-    public void setup(){
+    public void setup() {
 
         for (int i = 0; i < movers.length; i++) {
-            movers[i] = new Mover(this,random(0.1f, 2f), random(width), random(height));
+            movers[i] = new Mover(this, random(0.1f, 2f), random(width), random(height));
         }
         a = new AttractorTest(this);
 
     }
 
-    public void draw(){
+    public void draw() {
 
         background(255);
 

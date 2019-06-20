@@ -6,7 +6,7 @@ import processing.core.PImage;
 import processing.core.PVector;
 
 
-public class RembrandMeta extends PApplet{
+public class RembrandMeta extends PApplet {
 
     public static void main(String[] args) {
         PApplet.main("RembrandMeta");
@@ -22,20 +22,19 @@ public class RembrandMeta extends PApplet{
 
     // für dir Forces
     float masse = 1; //masse der Metaballs
-    PVector wind = new PVector(0.1f, 0,5f);
-    PVector gravity = new PVector(0f,0.1f * masse);
+    PVector wind = new PVector(0.1f, 0, 5f);
+    PVector gravity = new PVector(0f, 0.1f * masse);
 
     // Attractor
     Attractor a;
 
 
-
-    public void settings(){
+    public void settings() {
         size(1024, 768, P2D);
         //  pixelDensity(displayDensity());
     }
 
-    public void setup(){
+    public void setup() {
 
 
         // die Metaballs werden initialisiertÅ
@@ -45,7 +44,7 @@ public class RembrandMeta extends PApplet{
         client = new SyphonClient(this);
         server = new SyphonServer(this, "Processing Syphon");
 
-        sendSypongImg = createGraphics(width, height,P2D);
+        sendSypongImg = createGraphics(width, height, P2D);
 
         // Attractor
         a = new Attractor(this);
@@ -53,7 +52,7 @@ public class RembrandMeta extends PApplet{
 
     }
 
-    public void draw(){
+    public void draw() {
 
         sendSypongImg.beginDraw();
         sendSypongImg.background(0);
@@ -63,7 +62,7 @@ public class RembrandMeta extends PApplet{
         mBalls.update();
 
         sendSypongImg.endDraw();
-        image(sendSypongImg,0,0);
+        image(sendSypongImg, 0, 0);
 
         // ** Syphon send imag
         server.sendImage(sendSypongImg);
@@ -73,7 +72,7 @@ public class RembrandMeta extends PApplet{
         //mBalls.applyForces(gravity);
 
         //** Attractor kräfte hinzufügen
-        for (int i= 0; i < mBalls.anzahl; i++){
+        for (int i = 0; i < mBalls.anzahl; i++) {
             PVector aForce = a.attract(mBalls.balls[i]);
             mBalls.balls[i].applyFoce(aForce);
             mBalls.balls[i].update();
@@ -82,27 +81,23 @@ public class RembrandMeta extends PApplet{
 
         // ** Syphon get image
         if (client.newFrame()) {
-            // The first time getImage() is called with
-            // a null argument, it will initialize the PImage
-            // object with the correct size.
-            //img = client.getImage(img); // load the pixels array with the updated image info (slow)
             img = client.getImage(img, false); // does not load the pixels array (faster)
         }
         if (img != null) {
-            tint(255,120);
+            tint(255, 120);
             image(img, 0, 0, width, height);
         }
 
         // show Attractor
         a.show();
         a.drag();
-        a.hover(mouseX,mouseY);
+        a.hover(mouseX, mouseY);
 
 
         //** FrameRate kontrolle und Warnung
-        if (frameRate < 30){
-            fill(255,0,0);
-        }else {
+        if (frameRate < 30) {
+            fill(255, 0, 0);
+        } else {
             fill(255);
         }
         textSize(14);
@@ -111,12 +106,10 @@ public class RembrandMeta extends PApplet{
     }
 
 
+    public void keyPressed() {
+        println("keyCode: " + keyCode);
 
-
-    public void keyPressed(){
-        println("keyCode: " +keyCode);
-
-        switch (keyCode){
+        switch (keyCode) {
             case 38:
                 mBalls.ballsR += 100;
                 break;
@@ -124,17 +117,6 @@ public class RembrandMeta extends PApplet{
                 mBalls.ballsR -= 100;
                 break;
 
-                /*
-            case 39:
-                indexPix += 1;
-                //println("intexPix: " +indexPix);
-                break;
-            case 37:
-                indexPix -= 1;
-                //println("intexPix: " +indexPix);
-                break;
-
-                 */
         }
     }
 

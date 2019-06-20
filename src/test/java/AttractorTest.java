@@ -2,7 +2,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
 
-public class Attractor{
+public class AttractorTest {
     PApplet p;
 
     // hier müssen die globale Variablen etc. deklariert werden
@@ -15,7 +15,7 @@ public class Attractor{
 
 
     // Contrutor
-    Attractor(PApplet parent) {
+    AttractorTest(PApplet parent) {
         p = parent;
 
         position = new PVector(p.width/2,p.height/2);
@@ -24,8 +24,8 @@ public class Attractor{
         dragOffset = new PVector(0f,0f);
     }
 
-    public PVector attract(Ball  b){
-        PVector force = PVector.sub(position,b.pos);
+    public PVector attract(Mover b){
+        PVector force = PVector.sub(position,b.position);
         float d = force.mag();
         d = p.constrain(d,5f,25f);
         force.normalize();

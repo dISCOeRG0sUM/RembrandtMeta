@@ -102,7 +102,6 @@ public class RembrandMeta extends PApplet {
         }
         textSize(14);
         text("FrameRate: " + frameRate, 20, height - 20);
-        // **
     }
 
 

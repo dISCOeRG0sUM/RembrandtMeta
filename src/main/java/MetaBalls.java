@@ -11,7 +11,8 @@ public class MetaBalls{
     PApplet parent;
 
     // hier müssen die globale Variablen etc. deklariert werden
-    Ball[] balls = new Ball[5];
+    int anzahl = 5;
+    Ball[] balls = new Ball[anzahl];
     float ballsR = 800;
     PImage img;
 

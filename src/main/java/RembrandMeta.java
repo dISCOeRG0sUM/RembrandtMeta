@@ -6,7 +6,6 @@ import processing.core.PImage;
 import processing.core.PVector;
 
 
-
 public class RembrandMeta extends PApplet{
 
     public static void main(String[] args) {
@@ -25,6 +24,9 @@ public class RembrandMeta extends PApplet{
     float masse = 1; //masse der Metaballs
     PVector wind = new PVector(0.1f, 0,5f);
     PVector gravity = new PVector(0f,0.1f * masse);
+
+    // Attractor
+    Attractor a;
 
 
 
@@ -45,6 +47,8 @@ public class RembrandMeta extends PApplet{
 
         sendSypongImg = createGraphics(width, height,P2D);
 
+        // Attractor
+        a = new Attractor(this);
 
 
     }
@@ -65,8 +69,15 @@ public class RembrandMeta extends PApplet{
         server.sendImage(sendSypongImg);
 
         // ** füge Krafte hin zu
-        mBalls.applyForces(wind);
-        mBalls.applyForces(gravity);
+        //mBalls.applyForces(wind);
+        //mBalls.applyForces(gravity);
+
+        //** Attractor kräfte hinzufügen
+        for (int i= 0; i < mBalls.anzahl; i++){
+            PVector aForce = a.attract(mBalls.balls[i]);
+            mBalls.balls[i].applyFoce(aForce);
+            mBalls.balls[i].update();
+        }
 
 
         // ** Syphon get image
@@ -81,6 +92,11 @@ public class RembrandMeta extends PApplet{
             tint(255,120);
             image(img, 0, 0, width, height);
         }
+
+        // show Attractor
+        a.show();
+        a.drag();
+        a.hover(mouseX,mouseY);
 
 
         //** FrameRate kontrolle und Warnung
@@ -120,6 +136,14 @@ public class RembrandMeta extends PApplet{
 
                  */
         }
+    }
+
+    public void mousePressed() {
+        a.clicked(mouseX, mouseY);
+    }
+
+    public void mouseReleased() {
+        a.stopDragging();
     }
 
 }

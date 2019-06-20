@@ -33,6 +33,10 @@ public class Ball {
         pos.add(vel);
         acc.mult(0);
 
+
+        /*
+
+        // ball bounce
         if (pos.x < 0 || pos.x > parent.width){
             vel.x *= -1;
         }
@@ -40,6 +44,8 @@ public class Ball {
         if (pos.y < 0 || pos.y > parent.height){
             vel.y *= -1;
         }
+
+         */
     }
 
 

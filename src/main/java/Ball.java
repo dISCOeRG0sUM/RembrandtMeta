@@ -10,6 +10,7 @@ public class Ball {
     PVector acc; //acceleration;
     float r;
     float mass;
+    int erweiterung = 100; // wie weit die bälle das Display verlassen können
 
     // Contrutor
     Ball(PApplet p, float m, float x, float y) {
@@ -34,18 +35,16 @@ public class Ball {
         acc.mult(0);
 
 
-        /*
-
         // ball bounce
-        if (pos.x < 0 || pos.x > parent.width){
+        if (pos.x < 0 - erweiterung || pos.x > parent.width + erweiterung) {
             vel.x *= -1;
         }
 
-        if (pos.y < 0 || pos.y > parent.height){
+        if (pos.y < 0 - erweiterung || pos.y > parent.height + erweiterung) {
             vel.y *= -1;
         }
 
-         */
+
     }
 
 

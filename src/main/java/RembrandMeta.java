@@ -1,5 +1,6 @@
 import codeanticode.syphon.SyphonClient;
 import codeanticode.syphon.SyphonServer;
+import controlP5.*;
 import netP5.*;
 import oscP5.*;
 import processing.core.PApplet;
@@ -18,22 +19,28 @@ public class RembrandMeta extends PApplet {
     SyphonClient client;
     SyphonServer server;
     PImage img;
-
     PGraphics sendSypongImg;
     OscP5 oscP5;
     NetAddress myRemoteLocation;
 
+    //controllparamter
+    float ballSize;
+    float gravety;
+
+
     //GUI
-    UserInterface gui;
+    ControlP5 gui;
 
 
     // für dir Forces
-    float masse = 1; //masse der Metaballs
-    PVector wind = new PVector(0.1f, 0, 5f);
-    PVector gravity = new PVector(0f, 0.1f * masse);
+    //float masse = 1; //masse der Metaballs
+    //PVector wind = new PVector(0.1f, 0, 5f);
+    //PVector gravity = new PVector(0f, 0.1f * masse);
 
     // Attractor
     Attractor a;
+
+
 
 
     public void settings() {
@@ -43,17 +50,38 @@ public class RembrandMeta extends PApplet {
 
     public void setup() {
 
-        // gui test
-        gui = new UserInterface(this);
-
-        // die Metaballs werden initialisiertÅ
-        mBalls = new MetaBalls(this);
-
         // Start OSC listening for incoming massages at port XXXX
         // interesant OSC muss vor Syphone im setup stehen ansosten geht Syphone Client nicht.
         oscP5 = new OscP5(this, 9000);
         // Def die den OSC Emfpänger
-        myRemoteLocation = new NetAddress("192.168.178.23",8000);
+        myRemoteLocation = new NetAddress("192.168.178.23", 8000);
+
+
+        // GUI test
+        gui = new ControlP5(this);
+
+        gui.addSlider("ballSize")
+                .setPosition(10, 20)
+                .setSize(200, 20)
+                .setRange(0f, 1f)
+                .setValue(0.3f)
+                .setLabel("BallSize")
+                .setId(1)
+        ;
+
+        gui.addSlider("gravety")
+                .setPosition(10, 60)
+                .setSize(200, 20)
+                .setRange(0f, 1f)
+                .setValue(0.3f)
+                .setLabel("Gravety")
+                .setId(2)
+        ;
+
+
+        // die Metaballs werden initialisiertÅ
+        mBalls = new MetaBalls(this);
+
 
         // Syphong
         client = new SyphonClient(this);
@@ -82,9 +110,6 @@ public class RembrandMeta extends PApplet {
         // ** Syphon send imag
         server.sendImage(sendSypongImg);
 
-        // ** füge Krafte hin zu
-        //mBalls.applyForces(wind);
-        //mBalls.applyForces(gravity);
 
         //** Attractor kräfte hinzufügen
         for (int i = 0; i < mBalls.anzahl; i++) {
@@ -108,6 +133,10 @@ public class RembrandMeta extends PApplet {
         a.drag();
         a.hover(mouseX, mouseY);
 
+        // parameter update
+        mBalls.ballsR = ballSize * 20000f;
+        a.gravety = gravety * 5f;
+
 
         //** FrameRate kontrolle und Warnung
         if (frameRate < 30) {
@@ -117,6 +146,7 @@ public class RembrandMeta extends PApplet {
         }
         textSize(14);
         text("FrameRate: " + frameRate, 20, height - 20);
+
     }
 
 
@@ -125,10 +155,10 @@ public class RembrandMeta extends PApplet {
 
         switch (keyCode) {
             case 38:
-                mBalls.ballsR += 100;
+                ballSize += 100;
                 break;
             case 40:
-                mBalls.ballsR -= 100;
+                ballSize -= 100;
                 break;
 
         }
@@ -142,8 +172,8 @@ public class RembrandMeta extends PApplet {
         a.stopDragging();
 
         OscMessage myMessage = new OscMessage("/1/xy1");
-        myMessage.add(a.position.x/width);
-        myMessage.add(a.position.y/height);
+        myMessage.add(a.position.x / width);
+        myMessage.add(a.position.y / height);
         println(myMessage);
         oscP5.send(myMessage, myRemoteLocation);
     }
@@ -162,7 +192,23 @@ public class RembrandMeta extends PApplet {
 
         if (theOscMessage.checkAddrPattern("/1/fader1")) {
             if (theOscMessage.checkTypetag("f")) {
-                mBalls.ballsR = (theOscMessage.get(0).floatValue())*20000;
+                ballSize = theOscMessage.get(0).floatValue();
+
+
+                gui.getController("ballSize")
+                        .setValue(ballSize)
+                ;
+            }
+        }
+
+        if (theOscMessage.checkAddrPattern("/1/fader2")) {
+            if (theOscMessage.checkTypetag("f")) {
+                gravety = theOscMessage.get(0).floatValue();
+
+
+                gui.getController("gravety")
+                        .setValue(gravety)
+                ;
             }
         }
 
@@ -171,6 +217,32 @@ public class RembrandMeta extends PApplet {
         //print("### received an osc message.");
         //print(" addrpattern: " + theOscMessage.addrPattern());
         //println(" typetag: " + theOscMessage.typetag());
+    }
+
+
+    public void controlEvent(ControlEvent theEvent) {
+
+        println("got a control event from controller with id " + theEvent.getController().getId());
+
+
+        switch (theEvent.getController().getId()) {
+            case (1):
+
+                ballSize = (theEvent.getController().getValue());
+                OscMessage myMessage = new OscMessage("/1/fader1");
+                myMessage.add(ballSize);
+                println(myMessage);
+                oscP5.send(myMessage, myRemoteLocation);
+                break;
+            case (2):
+                gravety = (theEvent.getController().getValue());
+                OscMessage myMessage2 = new OscMessage("/1/fader2");
+                myMessage2.add(gravety);
+                println(myMessage2);
+                oscP5.send(myMessage2, myRemoteLocation);
+                break;
+
+        }
     }
 
 

@@ -7,7 +7,7 @@ public class Attractor {
 
     // hier müssen die globale Variablen etc. deklariert werden
     float mass;
-    float G;
+    float gravety;
     PVector position;
     boolean dragging = false;
     boolean rollover = false;
@@ -20,7 +20,7 @@ public class Attractor {
 
         position = new PVector(p.width / 2, p.height / 2);
         mass = 20;
-        G = 1;
+        gravety = 1;
         dragOffset = new PVector(0f, 0f);
     }
 
@@ -29,7 +29,7 @@ public class Attractor {
         float d = force.mag();
         d = PApplet.constrain(d, 5f, 25f);
         force.normalize();
-        float strength = (G * mass * b.mass) / (d * d);
+        float strength = (gravety * mass * b.mass) / (d * d);
         force.mult(strength);
         return force;
     }

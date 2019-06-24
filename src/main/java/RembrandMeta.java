@@ -58,7 +58,7 @@ public class RembrandMeta extends PApplet {
         sendSypongImg.background(0);
 
         // ** Metaballs anzeigen
-        sendSypongImg.image(mBalls.show(), 0, 0);  // wie kann ich das hier in das sendSyponImag bekommen?
+        sendSypongImg.image(mBalls.show(), 0, 0);
         mBalls.update();
 
         sendSypongImg.endDraw();

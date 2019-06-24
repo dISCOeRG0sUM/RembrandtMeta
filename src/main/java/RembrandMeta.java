@@ -23,6 +23,9 @@ public class RembrandMeta extends PApplet {
     OscP5 oscP5;
     NetAddress myRemoteLocation;
 
+    //GUI
+    UserInterface gui;
+
 
     // für dir Forces
     float masse = 1; //masse der Metaballs
@@ -40,6 +43,8 @@ public class RembrandMeta extends PApplet {
 
     public void setup() {
 
+        // gui test
+        gui = new UserInterface(this);
 
         // die Metaballs werden initialisiertÅ
         mBalls = new MetaBalls(this);

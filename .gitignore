@@ -52,6 +52,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Directories I not will on git
+test
+
 ### Processing template
 .DS_Store
 applet

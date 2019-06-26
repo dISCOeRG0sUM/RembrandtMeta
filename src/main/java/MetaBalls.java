@@ -13,6 +13,7 @@ public class MetaBalls{
     Ball[] balls = new Ball[anzahl];
     float ballsR = 800;
     PImage img;
+    float sum;
 
 
     // Contrutor
@@ -24,6 +25,8 @@ public class MetaBalls{
         }
 
         img = parent.createImage(parent.width, parent.height, ARGB);
+
+
 
     }
 
@@ -47,6 +50,8 @@ public class MetaBalls{
         }
 
         img.updatePixels();
+
+
         return img;
     }
 

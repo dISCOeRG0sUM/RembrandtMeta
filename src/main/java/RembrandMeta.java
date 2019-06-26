@@ -29,6 +29,11 @@ public class RembrandMeta extends PApplet {
     float friction;
     boolean frictionOn = false;
     float sizeM;
+    float bounceSize;
+    boolean bounceOn;
+    int aColorOscIn = color(0, 255, 0);
+    int fColorOscIn = color(0, 200, 0);
+    int bColorOscIn = color(0, 150, 0);
 
 
     //GUI
@@ -77,7 +82,9 @@ public class RembrandMeta extends PApplet {
                 .setSize(20, 20)
                 .setSwitch(true)
                 .setId(2)
-
+                .setColorActive(aColorOscIn)
+                .setColorForeground(fColorOscIn)
+                .setColorBackground(bColorOscIn)
         ;
 
 
@@ -97,6 +104,9 @@ public class RembrandMeta extends PApplet {
                 .setSize(20, 20)
                 .setSwitch(true)
                 .setId(4)
+                .setColorActive(aColorOscIn)
+                .setColorForeground(fColorOscIn)
+                .setColorBackground(bColorOscIn)
         ;
 
         // der mutiplikator für de BallSize
@@ -116,6 +126,9 @@ public class RembrandMeta extends PApplet {
                 .setSize(20, 20)
                 .setSwitch(true)
                 .setId(6)
+                .setColorActive(aColorOscIn)
+                .setColorForeground(fColorOscIn)
+                .setColorBackground(bColorOscIn)
         ;
 
         gui.addSlider("friction")
@@ -139,19 +152,21 @@ public class RembrandMeta extends PApplet {
         gui.addSlider("bounce")
                 .setPosition(50, 180)
                 .setSize(200, 20)
-                .setRange(2000f, 20000f)
+                .setRange(0f, 1f)
                 .setValue(0.003f)
                 .setLabel("Bounce")
                 .setId(9)
+                .setValue(1)
         ;
 
         gui.addButton("bBounce")
                 .setLabel("")
-                .setValue(0)
+                .setValue(1)
                 .setPosition(15, 180)
                 .setSize(20, 20)
                 .setSwitch(true)
                 .setId(10)
+                .setOn()
         ;
 
 
@@ -195,7 +210,7 @@ public class RembrandMeta extends PApplet {
             PVector aForce = a.attract(mBalls.balls[i]);
 
             // add Friction
-            if (frictionOn){
+            if (frictionOn) {
                 PVector frivtionV = mBalls.balls[i].vel.get();
                 frivtionV.mult(-1);
                 frivtionV.normalize();
@@ -204,6 +219,9 @@ public class RembrandMeta extends PApplet {
                 //println(frivtionV);
             }
             mBalls.balls[i].applyFoce(aForce);
+            if (bounceOn) {
+                mBalls.balls[i].checkbounce(a.position, bounceSize * (width + 50));
+            }
             mBalls.balls[i].update();
         }
 
@@ -309,8 +327,6 @@ public class RembrandMeta extends PApplet {
     }
 
 
-
-
     public void controlEvent(ControlEvent theEvent) {
 
         //println("got a control event from controller with id " + theEvent.getController().getId());
@@ -344,9 +360,15 @@ public class RembrandMeta extends PApplet {
 
             case (8):
                 frictionOn = !frictionOn;
-
                 break;
 
+            case (9):
+                bounceSize = (theEvent.getController().getValue());
+                break;
+
+            case (10):
+                bounceOn = !bounceOn;
+                break;
 
 
         }

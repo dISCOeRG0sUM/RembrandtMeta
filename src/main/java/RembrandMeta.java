@@ -25,8 +25,9 @@ public class RembrandMeta extends PApplet {
 
     //controllparamter
     float ballSize;
-    float gravety;
+    float mass;
     float friction;
+    boolean frictionOn = false;
     float sizeM;
 
 
@@ -54,7 +55,7 @@ public class RembrandMeta extends PApplet {
         // interesant OSC muss vor Syphone im setup stehen ansosten geht Syphone Client nicht.
         oscP5 = new OscP5(this, 9000);
         // Def die den OSC Emfpänger
-        myRemoteLocation = new NetAddress("192.168.1.2", 8000);
+        myRemoteLocation = new NetAddress("172.16.42.156", 8000);
 
 
         // GUI test
@@ -80,19 +81,19 @@ public class RembrandMeta extends PApplet {
         ;
 
 
-        gui.addSlider("gravety")
-                .setPosition(50, 60)
+        gui.addSlider("mass")
+                .setPosition(50, 100)
                 .setSize(200, 20)
                 .setRange(0f, 1f)
                 .setValue(0.3f)
-                .setLabel("Gravety")
+                .setLabel("Mass")
                 .setId(3)
         ;
 
-        gui.addButton("bGravety")
+        gui.addButton("bMass")
                 .setLabel("")
                 .setValue(0)
-                .setPosition(15, 60)
+                .setPosition(15, 100)
                 .setSize(20, 20)
                 .setSwitch(true)
                 .setId(4)
@@ -100,7 +101,7 @@ public class RembrandMeta extends PApplet {
 
         // der mutiplikator für de BallSize
         gui.addSlider("sizeM")
-                .setPosition(50, 100)
+                .setPosition(50, 60)
                 .setSize(200, 20)
                 .setRange(2000f, 20000f)
                 .setValue(0.003f)
@@ -111,7 +112,7 @@ public class RembrandMeta extends PApplet {
         gui.addButton("bSizeM")
                 .setLabel("")
                 .setValue(0)
-                .setPosition(15, 100)
+                .setPosition(15, 60)
                 .setSize(20, 20)
                 .setSwitch(true)
                 .setId(6)
@@ -120,7 +121,7 @@ public class RembrandMeta extends PApplet {
         gui.addSlider("friction")
                 .setPosition(50, 140)
                 .setSize(200, 20)
-                .setRange(2000f, 20000f)
+                .setRange(0f, 1f)
                 .setValue(0.003f)
                 .setLabel("Friction")
                 .setId(7)
@@ -136,21 +137,21 @@ public class RembrandMeta extends PApplet {
         ;
 
         gui.addSlider("bounce")
-                .setPosition(50, 140)
+                .setPosition(50, 180)
                 .setSize(200, 20)
                 .setRange(2000f, 20000f)
                 .setValue(0.003f)
-                .setLabel("SizeM")
-                .setId(3)
+                .setLabel("Bounce")
+                .setId(9)
         ;
 
         gui.addButton("bBounce")
                 .setLabel("")
                 .setValue(0)
-                .setPosition(15, 140)
+                .setPosition(15, 180)
                 .setSize(20, 20)
                 .setSwitch(true)
-                .setId(2)
+                .setId(10)
         ;
 
 
@@ -192,8 +193,17 @@ public class RembrandMeta extends PApplet {
         //** Attractor kräfte hinzufügen
         for (int i = 0; i < mBalls.anzahl; i++) {
             PVector aForce = a.attract(mBalls.balls[i]);
+
+            // add Friction
+            if (frictionOn){
+                PVector frivtionV = mBalls.balls[i].vel.get();
+                frivtionV.mult(-1);
+                frivtionV.normalize();
+                frivtionV.mult(friction);
+                mBalls.balls[i].applyFoce(frivtionV);
+                //println(frivtionV);
+            }
             mBalls.balls[i].applyFoce(aForce);
-            //mBalls.balls[i].applyFriction(friction);
             mBalls.balls[i].update();
         }
 
@@ -214,7 +224,7 @@ public class RembrandMeta extends PApplet {
 
         // parameter update
         mBalls.ballsR = ballSize * sizeM;
-        a.gravety = gravety * 5f;
+        a.mass = mass * 100;
 
 
         //** FrameRate kontrolle und Warnung
@@ -269,7 +279,7 @@ public class RembrandMeta extends PApplet {
         }
 
 
-        if (theOscMessage.checkAddrPattern("/FromVDMX/x")) {
+        if (theOscMessage.checkAddrPattern("/1/fader1")) {
             if (theOscMessage.checkTypetag("f")) {
                 ballSize = theOscMessage.get(0).floatValue();
 
@@ -282,11 +292,11 @@ public class RembrandMeta extends PApplet {
 
         if (theOscMessage.checkAddrPattern("/1/fader2")) {
             if (theOscMessage.checkTypetag("f")) {
-                gravety = theOscMessage.get(0).floatValue();
+                mass = theOscMessage.get(0).floatValue();
 
 
-                gui.getController("gravety")
-                        .setValue(gravety)
+                gui.getController("mass")
+                        .setValue(mass)
                 ;
             }
         }
@@ -299,6 +309,8 @@ public class RembrandMeta extends PApplet {
     }
 
 
+
+
     public void controlEvent(ControlEvent theEvent) {
 
         //println("got a control event from controller with id " + theEvent.getController().getId());
@@ -308,28 +320,34 @@ public class RembrandMeta extends PApplet {
             case (1):
 
                 ballSize = (theEvent.getController().getValue());
-                OscMessage myMessage = new OscMessage("/FromVDMX/x");
+                OscMessage myMessage = new OscMessage("/1/fader1");
                 myMessage.add(ballSize);
                 println(myMessage);
                 oscP5.send(myMessage, myRemoteLocation);
                 break;
-            case (2):
-                gravety = (theEvent.getController().getValue());
+            case (3):
+                mass = (theEvent.getController().getValue());
                 OscMessage myMessage2 = new OscMessage("/1/fader2");
-                myMessage2.add(gravety);
+                myMessage2.add(mass);
                 println(myMessage2);
                 oscP5.send(myMessage2, myRemoteLocation);
                 break;
-                /*
-            case (3):
+
+            case (7):
                 friction = (theEvent.getController().getValue());
-                OscMessage myMessage3 = new OscMessage("/1/fader3");
-                myMessage3.add(gravety);
-                println(myMessage3);
-                oscP5.send(myMessage3, myRemoteLocation);
+                friction /= 10;
+                //OscMessage myMessage3 = new OscMessage("/1/fader3");
+                //myMessage3.add(gravety);
+                //println(myMessage3);
+                //oscP5.send(myMessage3, myRemoteLocation);
                 break;
 
-                 */
+            case (8):
+                frictionOn = !frictionOn;
+
+                break;
+
+
 
         }
     }

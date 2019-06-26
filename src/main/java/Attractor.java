@@ -19,7 +19,7 @@ public class Attractor {
         p = parent;
 
         position = new PVector(p.width / 2, p.height / 2);
-        mass = 20;
+        mass = 1;
         gravety = 1;
         dragOffset = new PVector(0f, 0f);
     }
@@ -41,13 +41,13 @@ public class Attractor {
         if (dragging) p.fill(50);
         else if (rollover) p.fill(100);
         else p.fill(150, 200);
-        p.ellipse(position.x, position.y, mass * 2, mass * 2);
+        p.ellipse(position.x, position.y, 40, 40);
     }
 
     // The methods below are for mouse interaction
     public void clicked(int mx, int my) {
         float d = PApplet.dist(mx, my, position.x, position.y);
-        if (d < mass) {
+        if (d < 40) {
             dragging = true;
             dragOffset.x = position.x - mx;
             dragOffset.y = position.y - my;

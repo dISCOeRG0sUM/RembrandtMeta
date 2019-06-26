@@ -29,6 +29,14 @@ public class Ball {
         acc.add(f);
     }
 
+    public void applyFriction(float c) {
+        PVector friction = vel;
+        friction.mult(-1f);
+        friction.normalize();
+        friction.mult(c);
+
+    }
+
     public void update() {
         vel.add(acc);
         pos.add(vel);

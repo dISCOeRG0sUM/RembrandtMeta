@@ -1,6 +1,5 @@
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.core.PVector;
 
 import static processing.core.PApplet.dist;
 import static processing.core.PConstants.ARGB;
@@ -28,13 +27,7 @@ public class MetaBalls{
 
     }
 
-    public void applyForces(PVector forces) {
 
-        for (Ball b : balls) {
-            b.applyFoce(forces);
-        }
-
-    }
 
 
     public PImage show() {

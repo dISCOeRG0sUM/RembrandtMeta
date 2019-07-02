@@ -24,7 +24,7 @@ public class Ball {
         pos = new PVector(x, y);
         vel = new PVector(0, 0);
         acc = new PVector(0, 0);
-        r = 40;
+        r = 50;
 
     }
 

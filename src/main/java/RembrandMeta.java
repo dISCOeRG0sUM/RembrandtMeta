@@ -8,6 +8,7 @@ import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PVector;
 
+// branch Test
 
 public class RembrandMeta extends PApplet {
 
@@ -60,7 +61,7 @@ public class RembrandMeta extends PApplet {
         // interesant OSC muss vor Syphone im setup stehen ansosten geht Syphone Client nicht.
         oscP5 = new OscP5(this, 9000);
         // Def die den OSC Emfpänger
-        myRemoteLocation = new NetAddress("172.16.42.156", 8000);
+        myRemoteLocation = new NetAddress("192.168.178.23", 8000);
 
 
         // GUI test
@@ -241,7 +242,7 @@ public class RembrandMeta extends PApplet {
         a.hover(mouseX, mouseY);
 
         // parameter update
-        mBalls.ballsR = ballSize * sizeM;
+        mBalls.ballsR = ballSize * sizeM * 500;
         a.mass = mass * 100;
 
 

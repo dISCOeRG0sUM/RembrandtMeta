@@ -11,7 +11,7 @@ public class MetaBalls{
 
     int anzahl = 5;
     Ball[] balls = new Ball[anzahl];
-    float ballsR = 800;
+    float ballsR = 800 ;
     PImage img;
     float sum;
 
@@ -21,7 +21,7 @@ public class MetaBalls{
         parent = p;
 
         for (int i = 0; i < balls.length; i++) {
-            balls[i] = new Ball(parent, parent.random(1, 4), parent.random(parent.width), parent.random(parent.height));
+            balls[i] = new Ball(parent, parent.random(1, 4), parent.width/2, parent.height/2);
         }
 
         img = parent.createImage(parent.width, parent.height, ARGB);
@@ -43,7 +43,7 @@ public class MetaBalls{
                 float sum = 0;
                 for (Ball b : balls) {
                     float d = dist(x, y, b.pos.x, b.pos.y);
-                    sum += ballsR / d;
+                    sum += ballsR / (d*d*d);
                 }
                 img.pixels[index] = parent.color(255, 255, 255, sum);
             }

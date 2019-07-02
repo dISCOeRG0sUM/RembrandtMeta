@@ -8,6 +8,7 @@ import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PVector;
 
+// branch Test
 
 public class RembrandMeta extends PApplet {
 
@@ -23,6 +24,22 @@ public class RembrandMeta extends PApplet {
     OscP5 oscP5;
     NetAddress myRemoteLocation;
 
+    //OSC Parameter
+    String remoteIP = "192.168.178.23";
+    int remotePort = 8000;
+    int listhenPort = 9000;
+
+    //OSC Adressen
+    String oscBallPos = "/1/xy1";
+    String oscBallSzize = "/1/fader1";
+    String oscSizeM = "/sizeM";
+    String oscMass = "/mass";
+    String oscFriction = "/friction";
+    String oscBaunceSize = "/bounceSize";
+
+
+
+
     //controllparamter
     float ballSize;
     float mass;
@@ -31,9 +48,24 @@ public class RembrandMeta extends PApplet {
     float sizeM;
     float bounceSize;
     boolean bounceOn;
+
+    // farben für Knöpfe
     int aColorOscIn = color(0, 255, 0);
     int fColorOscIn = color(0, 200, 0);
     int bColorOscIn = color(0, 150, 0);
+
+    int aColorReset = color(255, 0, 0);
+    int fColorReset = color(200, 0, 0);
+    int bColorReset = color(150, 0, 0);
+
+    // Rest parameter
+    private static final float BALLSIZE = 0.3f;
+    private static final float SIZEM = 2000f;
+    private static final float MASS = 0.30f;
+    private static final float FRICTION = 0.29f;
+    private static final boolean FRICTIONON = true;
+    private static final float BOUNCESIZE = 1f;
+    private static final boolean BOUNCEON = true;
 
 
     //GUI
@@ -58,9 +90,9 @@ public class RembrandMeta extends PApplet {
 
         // Start OSC listening for incoming massages at port XXXX
         // interesant OSC muss vor Syphone im setup stehen ansosten geht Syphone Client nicht.
-        oscP5 = new OscP5(this, 9000);
+        oscP5 = new OscP5(this, listhenPort);
         // Def die den OSC Emfpänger
-        myRemoteLocation = new NetAddress("172.16.42.156", 8000);
+        myRemoteLocation = new NetAddress(remoteIP, remotePort);
 
 
         // GUI test
@@ -153,7 +185,6 @@ public class RembrandMeta extends PApplet {
                 .setPosition(50, 180)
                 .setSize(200, 20)
                 .setRange(0f, 1f)
-                .setValue(0.003f)
                 .setLabel("Bounce")
                 .setId(9)
                 .setValue(1)
@@ -167,6 +198,18 @@ public class RembrandMeta extends PApplet {
                 .setSwitch(true)
                 .setId(10)
                 .setOn()
+        ;
+
+        gui.addButton("reset")
+                .setLabel("reset")
+                .setValue(0)
+                .setPosition(125, 220)
+                .setSize(50, 50)
+                .setSwitch(false)
+                .setId(11)
+                .setColorActive(aColorReset)
+                .setColorForeground(fColorReset)
+                .setColorBackground(bColorReset)
         ;
 
 
@@ -241,7 +284,7 @@ public class RembrandMeta extends PApplet {
         a.hover(mouseX, mouseY);
 
         // parameter update
-        mBalls.ballsR = ballSize * sizeM;
+        mBalls.ballsR = ballSize * sizeM * 30000;
         a.mass = mass * 100;
 
 
@@ -253,6 +296,50 @@ public class RembrandMeta extends PApplet {
         }
         textSize(14);
         text("FrameRate: " + frameRate, 20, height - 20);
+
+    }
+
+    // hir werden alle  parameter auf null gesetzt falls es mal ein Problem problem gibt
+    public void resetPara() {
+
+        // variable parameter setzten
+        ballSize = BALLSIZE;
+        sizeM = SIZEM;
+        mass = MASS;
+        friction = FRICTION;
+        frictionOn = FRICTIONON;
+        bounceSize = BOUNCESIZE;
+        bounceOn = BOUNCEON;
+
+
+        // Attractor in die mitte des Fensters setzten
+        a.position.x = width / 2;
+        a.position.y = height / 2;
+
+        // die Position der Metabols in die Mitte setzten
+        for (int i = 0; i < mBalls.anzahl; i++) {
+            mBalls.balls[i].pos.x = width / 2;
+            mBalls.balls[i].pos.y = height / 2;
+            mBalls.balls[i].acc.mult(0); // setzte die Beschläunigung auf 0
+            mBalls.balls[i].vel.mult(0); // setze die geschwindigkeit auf 0
+        }
+
+
+        // Parameter n das interface übergeben
+        /*
+        ## Hier funktioniert iwas noch nicht....
+        gui.getController("ballSize").setValue(ballSize);
+        gui.getController("sizeM").setValue(sizeM);
+        gui.getController("mass").setValue(mass);
+        gui.getController("friction)").setValue(friction);
+        gui.getController("bFriction").setValue(1);
+        gui.getController("bounce").setValue(bounceSize);
+        gui.getController("bBounce").setValue(1);
+
+         */
+
+
+        // paramter ber osc senden
 
     }
 
@@ -278,17 +365,18 @@ public class RembrandMeta extends PApplet {
     public void mouseReleased() {
         a.stopDragging();
 
-        OscMessage myMessage = new OscMessage("/1/xy1");
+        OscMessage myMessage = new OscMessage(oscBallPos);
         myMessage.add(a.position.x / width);
         myMessage.add(a.position.y / height);
         println(myMessage);
         oscP5.send(myMessage, myRemoteLocation);
     }
 
+    // OSC empfangen
     public void oscEvent(OscMessage theOscMessage) {
 
 
-        if (theOscMessage.checkAddrPattern("/1/xy1")) {
+        if (theOscMessage.checkAddrPattern(oscBallPos)) {
             if (theOscMessage.checkTypetag("ff")) {
                 a.position.x = (theOscMessage.get(0).floatValue()) * width;
                 a.position.y = (theOscMessage.get(1).floatValue()) * height;
@@ -297,7 +385,7 @@ public class RembrandMeta extends PApplet {
         }
 
 
-        if (theOscMessage.checkAddrPattern("/1/fader1")) {
+        if (theOscMessage.checkAddrPattern(oscBallSzize)) {
             if (theOscMessage.checkTypetag("f")) {
                 ballSize = theOscMessage.get(0).floatValue();
 
@@ -336,7 +424,7 @@ public class RembrandMeta extends PApplet {
             case (1):
 
                 ballSize = (theEvent.getController().getValue());
-                OscMessage myMessage = new OscMessage("/1/fader1");
+                OscMessage myMessage = new OscMessage(oscBallSzize);
                 myMessage.add(ballSize);
                 println(myMessage);
                 oscP5.send(myMessage, myRemoteLocation);
@@ -368,6 +456,11 @@ public class RembrandMeta extends PApplet {
 
             case (10):
                 bounceOn = !bounceOn;
+                break;
+
+            case (11):
+                //Rest Parameter funst noch nicht
+                //resetPara();
                 break;
 
 

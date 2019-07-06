@@ -21,7 +21,7 @@ public class MetaBalls{
         parent = p;
 
         for (int i = 0; i < balls.length; i++) {
-            balls[i] = new Ball(parent, parent.random(1, 4), parent.width/2, parent.height/2);
+            balls[i] = new Ball(parent, parent.random(3, 7), parent.width/2, parent.height/2);
         }
 
         img = parent.createImage(parent.width, parent.height, ARGB);
